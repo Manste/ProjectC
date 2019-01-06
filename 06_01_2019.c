@@ -76,10 +76,6 @@ void courseTour(int nbVoitures, int km) {
     }
 
     if(f == 0){
-      if(down(semid,0)==-1){		// Demande l'acces a la memoire partagee
-    				perror("Erreur : Demande d'accès à la mémoire impossible");
-    				exit(-1);
-    	}
 
       srand(time(0) + getpid());
       int shmid2 = shmget(shmkey, sizeof(voiture), IPC_CREAT | 0666);
@@ -164,20 +160,17 @@ void courseTour(int nbVoitures, int km) {
             }
             sleep(1);
           }
-
-          if(up(semid,0)==-1){		// Rend l'acces a la memoire partagee
-        				perror("Erreur: Rendre l'accès à la mémoire impossible");
-        				exit(-1);
-        	}
       }
 
     }
+
       //il est temps pour le fils de mourrir
       //mais avant il doit se détacher de la memoire partagee
       if(shmdt(voituresCourse) == -1){
         perror("détachement impossible: Erreur shmdt du fils.\n");
         exit(-1);
       }
+
       //le fils se suicide
       exit(1);
     }
